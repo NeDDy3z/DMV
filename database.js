@@ -20,36 +20,21 @@ const insert_commands = {
     "osoba" :"osoba (jmeno, prijmeni, rod_cis, ztp, adresa)",
     "ridicskeopravneni" : "ridicskeopravneni (typ, max_hmotnost)",
     "ridicskyprukaz" : "ridicskyprukaz (id_o, id_u, id_ro, dat_zacatku, dat_konce)",
-    "tchnickyprukaz" : "tchnickyprukaz (id_v, id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol)",
-    "vozidlo" : "vozidlo (id_tp)"
+    "vozidlo" : "vozidlo (id_tp)",
+    "tchnickyprukaz" : "tchnickyprukaz (id_v, id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol)"
 };
     
 
 
-/*
-function insert(table, data) {
-    const query = 'INSERT INTO ' + insert_commands[table] +' VALUES (';
-    for (var i = 0; i < data.length; i++) {
-        query += data[i];
-        if (i < data.length -1) query +=",";
-    }
-    query += ");"
 
+//
+// SQL REQUESTS
+//
 
-  db.query(query, [name, email], (err, results) => {
-    if (err) {
-      console.error('Error adding data to the database:', err);
-      res.status(500).send('Internal Server Error');
-    } else {
-      res.status(200).send('Data added to the database successfully');
-    }
-  });
-};
-*/
+// ÚŘAD
+function insertUrad(nazev, adresa, typ) {
+    let sql = `INSERT INTO urad (nazev, adresa, typ) VALUES (${nazev}, ${adresa}, ${typ});`;
 
-function insertOsoba(jmeno, prijmeni, rod_cis, ztp, adresa) {
-    let sql = `INSERT INTO (jmeno, prijmeni, rod_cis, ztp, adresa) VALUES (${jmeno}, ${prijmeni}, ${rod_cis}, ${ztp}, ${adresa});`;
-    // later
     db.query(sql, (err, results) => {
         if (err) {
           console.error('Error - InsertOsoba : ', err);
@@ -57,10 +42,52 @@ function insertOsoba(jmeno, prijmeni, rod_cis, ztp, adresa) {
         } else {
           res.status(200).send('Success - InsertOsoba');
         }
-      });
+    });
 };
 
-function selectOsoba() {
-    
-}
+function selectUrad(searchCollection) {
+    let sql = 'SELECT * FROM urad';
 
+    if (searchCollection.length > 0) sql += ' WHERE ';
+    for (var i = 0; i < searchCollection.length; i++) {
+        sql += i=0 ? 'nazev = ' : i=1 ? 'adresa = ' : 'typ = '
+        sql += `'${searchCollection[i]}'`;
+    };
+
+};
+
+
+
+// OSOBA
+function insertOsoba(jmeno, prijmeni, rod_cis, ztp, adresa) {
+    let sql = `INSERT INTO osoba (jmeno, prijmeni, rod_cis, ztp, adresa) VALUES (${jmeno}, ${prijmeni}, ${rod_cis}, ${ztp}, ${adresa});`;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+          console.error('Error - InsertOsoba : ', err);
+          res.status(500).send('Internal Server Error');
+        } else {
+          res.status(200).send('Success - InsertOsoba');
+        }
+    });
+};
+
+function selectOsoba(jmeno, prijmeni, rod_cis, ztp, adresa) {
+    
+};
+
+
+
+// ŘIDIČSKÝ PRŮKAZ
+
+
+
+// ŘIDIČSKÉ OPRÁVNĚNÍ
+
+
+
+// VOZIDLO
+
+
+
+// TECHNICKÝ PRŮKAZ
