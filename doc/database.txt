@@ -1,0 +1,73 @@
+CREATE DATABASE IF NOT EXISTS Ministerstvodopravy;
+
+USE Ministerstvodopravy;
+
+CREATE TABLE IF NOT EXISTS Ministerstvo (
+    id_m INT PRIMARY KEY AUTO_INCREMENT,
+    jmeno_ministra VARCHAR(255) NOT NULL,
+    prijmeni_ministra VARCHAR(255) NOT NULL,
+    adresa VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Urad (
+    id_u INT PRIMARY KEY AUTO_INCREMENT,
+    id_m INT,
+    nazev VARCHAR(255) NOT NULL,
+    adresa VARCHAR(255) NOT NULL,
+    typ VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_m) REFERENCES Ministerstvo(id_m)
+);
+
+CREATE TABLE IF NOT EXISTS Osoba (
+    id_o INT PRIMARY KEY AUTO_INCREMENT,
+    jmeno VARCHAR(255) NOT NULL,
+    prijmeni VARCHAR(255) NOT NULL,
+    rod_cis VARCHAR(255) NOT NULL,
+    ztp BOOLEAN,
+    adresa VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS RidicskeOpravneni (
+    id_ro INT PRIMARY KEY AUTO_INCREMENT,
+    typ VARCHAR(255) NOT NULL,
+    max_hmotnost_kg INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS RidicskyPrukaz (
+    id_rp INT PRIMARY KEY AUTO_INCREMENT,
+    id_o INT,
+    id_u INT,
+    id_ro INT,
+    dat_zacatku DATE NOT NULL,
+    dat_konce DATE NOT NULL,
+    FOREIGN KEY (id_o) REFERENCES Osoba(id_o),
+    FOREIGN KEY (id_u) REFERENCES Urad(id_u),
+    FOREIGN KEY (id_ro) REFERENCES RidicskeOpravneni(id_ro)
+);
+
+
+CREATE TABLE IF NOT EXISTS Vozidlo (
+    id_v INT PRIMARY KEY AUTO_INCREMENT,
+    id_tp INT
+);
+
+CREATE TABLE IF NOT EXISTS TechnickyPrukaz (
+    id_tp INT PRIMARY KEY AUTO_INCREMENT,
+    id_v INT,
+    id_u INT,
+    provozovatel VARCHAR(255) NOT NULL,
+    znacka VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    barva VARCHAR(255) NOT NULL,
+    spz VARCHAR(20) NOT NULL,
+    vin VARCHAR(17) NOT NULL,
+    vykon_kw INT,
+    objem INT,
+    nej_rychlost INT,
+    rozmery_kol VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_v) REFERENCES Vozidlo(id_v),
+    FOREIGN KEY (id_u) REFERENCES Urad(id_u)
+);
+
+ALTER TABLE Vozidlo
+ADD FOREIGN KEY (id_tp) REFERENCES TechnickyPrukaz(id_tp);

@@ -1,0 +1,7 @@
+https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs
+https://www.w3schools.com/sql/
+https://www.w3schools.com/nodejs/
+https://kinsta.com/knowledgebase/what-is-express-js/
+https://dev.to/gbudjeakp/how-to-connect-your-client-side-to-your-server-side-using-node-and-express-2i71
+https://medium.com/@smfurquan0712/unveiling-the-magic-of-client-server-architecture-with-express-js-94fa41cfb6c7
+https://www.youtube.com/watch?v=EN6Dx22cPRI
