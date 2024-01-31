@@ -1,34 +1,44 @@
-import "database.js";
-
-
+// Dependencies
 const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./database.js');
 const app = express();
+
+// Server Port
 const port = 3000;
 
-/*
-const mysql = require('mysql');
-// Database Connection
-const db = mysql.createConnection({
-  host : 'localhost',
-  user : 'node',
-  password : 'node',
-  database : 'ministerstvodopravy'
-});
 
-db.connect((err) => {
-  if(err){
-    throw err;
-  }
-  console.log('MySQL connected');
-})
 
-*/
 
 // Client-Side
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
   res.status(200).sendFile(__dirname + '/public/index.html');
+});
+
+app.post('/insert', (req, res) => {
+  console.log(req.body.table);
+  /*
+  switch (req.body.table) {
+    case 'urad' : db.insertUrad(req.body.nazev);
+      break;  
+    default: console.log("err");
+      break;
+  }
+
+
+  const name = req.body.name;
+  const email = req.body.email;
+
+  const params = [name, email];
+
+  db.query(sql, params, (err, result) => {
+      if (err) throw err;
+    res.redirect('/');
+  });
+  */
 });
 
 
@@ -51,7 +61,11 @@ app.post('/addData', (req, res) => {
 
 
 
+
+
+
+
 // Start the app
 app.listen(port, 'localhost', () => {
-  console.log(`Application is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
