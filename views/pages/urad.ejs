@@ -10,11 +10,11 @@
             <form action="/urad/pridat" method="post" id="urad">
                 <input type="hidden" name="table" id="table" value="urad" required>
                 <label for="nazev">Název</label>
-                <input type="text" name="nazev" id="nazev" required>
+                <input type="text" name="nazev" id="nazev" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
                 <label for="adresa">Adresa</label>
-                <input type="text" name="adresa" id="adresa" required>
+                <input type="text" name="adresa" id="adresa" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
                 <label for="typ">Typ</label>
-                <input type="text" name="typ" id="typ" required>
+                <input type="text" name="typ" id="typ" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -24,13 +24,13 @@
             <form action="/urad/upravit" method="post" id="urad">
                 <input type="hidden" name="table" id="table" value="urad">
                 <label for="id">ID</label>
-                <input type="text" name="id" id="id">
+                <input type="text" name="id" id="id" required readonly>
                 <label for="nazev">Název</label>
-                <input type="text" name="nazev" id="nazev">
+                <input type="text" name="nazev" id="nazev" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
                 <label for="adresa">Adresa</label>
-                <input type="text" name="adresa" id="adresa">
+                <input type="text" name="adresa" id="adresa" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
                 <label for="typ">Typ</label>
-                <input type="text" name="typ" id="typ">
+                <input type="text" name="typ" id="typ" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -39,11 +39,11 @@
             <form action="/urad/hledat" method="post" id="urad">
                 <input type="hidden" name="table" id="table" value="urad">
                 <label for="nazev">Název</label>
-                <input type="text" name="nazev" id="nazev">
+                <input type="text" name="nazev" id="nazev" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]">
                 <label for="adresa">Adresa</label>
-                <input type="text" name="adresa" id="adresa">
+                <input type="text" name="adresa" id="adresa" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]">
                 <label for="typ">Typ</label>
-                <input type="text" name="typ" id="typ">
+                <input type="text" name="typ" id="typ" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]">
                 <button type="submit">Submit</button>
             </form>
             <table>
@@ -57,25 +57,29 @@
                 </tr>
                 <% for(var i=0; i < data.length; i++) { %>
                 <tr>
-                    <td><%= data[i].id_u %></td>
-                    <td><%= data[i].nazev %></td>
-                    <td><%= data[i].adresa %></td>
-                    <td><%= data[i].typ %></td>
-                    <td><button onclick="openEdit()"></button></td>
-                    <td><form action="/urad/smazat" method="post"><input type="hidden" name="id" value="<%= data[i].id_u %>"><button type="submit"></button></form></td>
+                    <td id="<%=i%>_id"><%= data[i].id_u %></td>
+                    <td id="<%=i%>_nazev"><%= data[i].nazev %></td>
+                    <td id="<%=i%>_adresa"><%= data[i].adresa %></td>
+                    <td id="<%=i%>_typ"><%= data[i].typ %></td>
+                    <td><button onclick="openEdit(<%=i%>)">Edit</button></td>
+                    <td><form action="/urad/smazat" method="post"><input type="hidden" name="id" value="<%= data[i].id_u %>"><button type="submit">Delete</button></form></td>
                 </tr> 
                 <% } %>
             </table>
-        </div>
+        </div> 
     </main>
     <%- include('../partials/footer'); %>
+
     <script>
         const insert = document.getElementsByClassName('insert')[0];
         const edit = document.getElementsByClassName('edit')[0];
         const data = document.getElementsByClassName('data')[0];
 
 
-        function openEdit() {
+        function openEdit(id) {
+            for (var i = 1; i < 4+1; i++) {
+                edit.getElementsByTagName('input')[i].value = document.getElementById(id +'_'+ edit.getElementsByTagName('input')[i].id).innerText;
+            }
             edit.style.display = 'block';
             data.style.display = 'none';
         }
