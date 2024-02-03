@@ -10,11 +10,18 @@
             <form action="/urad/pridat" method="post" id="urad">
                 <input type="hidden" name="table" id="table" value="urad" required>
                 <label for="nazev">Název</label>
-                <input type="text" name="nazev" id="nazev" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
+                <input type="text" name="nazev" id="nazev" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
                 <label for="adresa">Adresa</label>
-                <input type="text" name="adresa" id="adresa" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
+                <input type="text" name="adresa" id="adresa" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
                 <label for="typ">Typ</label>
-                <input type="text" name="typ" id="typ" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
+                <input type="text" name="typ" id="typ" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <button type="submit">Submit</button>
+            </form>
+            <h3>Vložení souboru .JSON</h3>
+            <form action="/urad/pridat/json" method="post" id="urad" enctype="multipart/form-data">
+                <input type="hidden" name="table" id="table" value="urad" required>
+                <label for="jsonfile">Soubor</label>
+                <input type="file" name="jsonfile" id="jsonfile" accept=".json" required>
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -26,11 +33,11 @@
                 <label for="id">ID</label>
                 <input type="text" name="id" id="id" required readonly>
                 <label for="nazev">Název</label>
-                <input type="text" name="nazev" id="nazev" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
+                <input type="text" name="nazev" id="nazev" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
                 <label for="adresa">Adresa</label>
-                <input type="text" name="adresa" id="adresa" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
+                <input type="text" name="adresa" id="adresa" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
                 <label for="typ">Typ</label>
-                <input type="text" name="typ" id="typ" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]" required>
+                <input type="text" name="typ" id="typ" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -39,11 +46,11 @@
             <form action="/urad/hledat" method="post" id="urad">
                 <input type="hidden" name="table" id="table" value="urad">
                 <label for="nazev">Název</label>
-                <input type="text" name="nazev" id="nazev" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]">
+                <input type="text" name="nazev" id="nazev" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
                 <label for="adresa">Adresa</label>
-                <input type="text" name="adresa" id="adresa" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]">
+                <input type="text" name="adresa" id="adresa" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
                 <label for="typ">Typ</label>
-                <input type="text" name="typ" id="typ" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-]+" title="[A-Za-z0-9\u0080-\uFFFF,.\-]">
+                <input type="text" name="typ" id="typ" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
                 <button type="submit">Submit</button>
             </form>
             <table>
@@ -61,8 +68,8 @@
                     <td id="<%=i%>_nazev"><%= data[i].nazev %></td>
                     <td id="<%=i%>_adresa"><%= data[i].adresa %></td>
                     <td id="<%=i%>_typ"><%= data[i].typ %></td>
-                    <td><button onclick="openEdit(<%=i%>)">Edit</button></td>
-                    <td><form action="/urad/smazat" method="post"><input type="hidden" name="id" value="<%= data[i].id_u %>"><button type="submit">Delete</button></form></td>
+                    <td><button onclick="openEdit(<%=i%>)">✏️</button></td>
+                    <td><form action="/urad/smazat" method="post"><input type="hidden" name="id" value="<%= data[i].id_u %>"><button type="submit">❌</button></form></td>
                 </tr> 
                 <% } %>
             </table>
