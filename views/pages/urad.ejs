@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../partials/head', {title: title}); %>
+<body>
+    <%- include('../partials/header', {title: title}); %>
+    <main>
+        <p><%- msg %></p>
+        <div class="insert">
+            <h3>Vložení dat</h3>
+            <form action="/urad/pridat" method="post" id="urad">
+                <input type="hidden" name="table" id="table" value="urad" required>
+                <label for="nazev">Název</label>
+                <input type="text" name="nazev" id="nazev" required>
+                <label for="adresa">Adresa</label>
+                <input type="text" name="adresa" id="adresa" required>
+                <label for="typ">Typ</label>
+                <input type="text" name="typ" id="typ" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="edit" style="display: none;">
+            <h3>Úprava dat</h3>
+            <button onclick="closeEdit()">X</button>
+            <form action="/urad/upravit" method="post" id="urad">
+                <input type="hidden" name="table" id="table" value="urad">
+                <label for="id">ID</label>
+                <input type="text" name="id" id="id">
+                <label for="nazev">Název</label>
+                <input type="text" name="nazev" id="nazev">
+                <label for="adresa">Adresa</label>
+                <input type="text" name="adresa" id="adresa">
+                <label for="typ">Typ</label>
+                <input type="text" name="typ" id="typ">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="data" style="display: block;">
+            <h3>Vyhledávání</h3>
+            <form action="/urad/hledat" method="post" id="urad">
+                <input type="hidden" name="table" id="table" value="urad">
+                <label for="nazev">Název</label>
+                <input type="text" name="nazev" id="nazev">
+                <label for="adresa">Adresa</label>
+                <input type="text" name="adresa" id="adresa">
+                <label for="typ">Typ</label>
+                <input type="text" name="typ" id="typ">
+                <button type="submit">Submit</button>
+            </form>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Název</th>
+                    <th>Adresa</th>
+                    <th>Typ</th>
+                    <th>Upravit</th>
+                    <th>Smazat</th>
+                </tr>
+                <% for(var i=0; i < data.length; i++) { %>
+                <tr>
+                    <td><%= data[i].id_u %></td>
+                    <td><%= data[i].nazev %></td>
+                    <td><%= data[i].adresa %></td>
+                    <td><%= data[i].typ %></td>
+                    <td><button onclick="openEdit()"></button></td>
+                    <td><form action="/urad/smazat" method="post"><input type="hidden" name="id" value="<%= data[i].id_u %>"><button type="submit"></button></form></td>
+                </tr> 
+                <% } %>
+            </table>
+        </div>
+    </main>
+    <%- include('../partials/footer'); %>
+    <script>
+        const insert = document.getElementsByClassName('insert')[0];
+        const edit = document.getElementsByClassName('edit')[0];
+        const data = document.getElementsByClassName('data')[0];
+
+
+        function openEdit() {
+            edit.style.display = 'block';
+            data.style.display = 'none';
+        }
+
+        function closeEdit() {
+            edit.style.display = 'none';
+            data.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
