@@ -18,6 +18,7 @@ router.get('/', (req, res) => {
     let msg = req.query.msg ? req.query.msg : '';
     if (searchData.length > 0) {
         res.render('pages/urad', { title: 'Úřady', data: searchData, msg: '' });
+        searchData = [];
     } else {
         select().then(results => {
             res.render('pages/urad', { title: 'Úřady', data: results, msg: msg });
@@ -41,7 +42,7 @@ router.post("/pridat", (req, res) => {
         db.query(sql, [1, nazev, adresa, typ], (err, results) => {
             if (err) {
                 console.error('DatabaseError - InsertUrad:\n', err);
-                res.status(500).redirect('/urad?msg=Data nebyla přidána');
+                res.status(500).redirect('/urad?msg=Chyba při přidávání dat');
             }
             else res.status(200).redirect('/urad?msg=Data přidána');
         });
@@ -50,7 +51,7 @@ router.post("/pridat", (req, res) => {
 });
 
 router.post("/pridat/json", upload.single('jsonfile'), (req, res) => {
-    if (!req.file) return res.status(400).send('Soubor nebyl nahrán');
+    if (!req.file) return res.status(400).send('Chyba, soubor nebyl nahrán');
 
     const fileContent = req.file.buffer.toString('utf8');
     const sql = 'INSERT INTO '+ tableName +' (id_m, nazev, adresa, typ) VALUES (?,?,?,?);';
@@ -62,7 +63,7 @@ router.post("/pridat/json", upload.single('jsonfile'), (req, res) => {
             db.query(sql, [1, element.nazev, element.adresa, element.typ]);
         });
 
-        res.status(200).redirect('/urad?msg=Data byla nahrána z JSON souboru');
+        res.status(200).redirect('/urad?msg=Data nahrána z JSON souboru');
     } catch (error) {
         console.error('Error parsing JSON file:', error);
         res.status(500).redirect('/urad?msg=Chyba při zpracování JSON souboru');
@@ -78,7 +79,7 @@ router.post("/upravit", (req, res) => {
         db.query(sql, [nazev, adresa, typ, id], (err, results) => {
             if (err) {
                 console.error('DatabaseError - InsertUrad:\n', err);
-                res.status(500).redirect('/urad?msg=Data nebyla upravena');
+                res.status(500).redirect('/urad?msg=Chyba při úpravě dat');
             }
             else res.status(200).redirect('/urad?msg=Data upravena');
         });
@@ -93,7 +94,7 @@ router.post("/smazat", (req, res) => {
             console.error('DatabaseError - DeleteUrad:\n', err);
             res.status(500).redirect('/urad?msg=Cyhba při mazání dat');
         }
-        else res.status(200).redirect('/urad?msg='+ msgName +' byl smazán');
+        else res.status(200).redirect('/urad?msg=Data smazána');
     });
 });
   
