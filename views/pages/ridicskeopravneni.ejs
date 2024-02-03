@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../partials/head', {title: title}); %>
+<body>
+    <%- include('../partials/header', {title: title}); %>
+    <main>
+        <p><%- msg %></p>
+        <div class="insert">
+            <h3>Vložení dat</h3>
+            <form action="/ridicskeopravneni/pridat" method="post" id="ridicskeopravneni">
+                <input type="hidden" name="table" id="table" value="ridicskeopravneni" required>
+                <label for="oznaceni">Označení</label>
+                <input type="text" name="oznaceni" id="oznaceni" minlength="1" maxlength="5" pattern="[A-Za-z0-9]" title="[A-Z a-z 0-9]" required>
+                <label for="kategorie">Kategorie</label>
+                <input type="text" name="kategorie" id="kategorie" minlength="2" maxlength="50" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="max_hmotnost_kg">Hmotnost (Kg)</label>
+                <input type="text" name="max_hmotnost_kg" id="max_hmotnost_kg" minlength="2" maxlength="8" pattern="[0-9]+" title="[0-9]" required>
+                <button type="submit">Submit</button>
+            </form>
+            <h3>Vložení souboru .JSON</h3>
+            <form action="/ridicskeopravneni/pridat/json" method="post" id="ridicskeopravneni" enctype="multipart/form-data">
+                <input type="hidden" name="table" id="table" value="ridicskeopravneni" required>
+                <label for="jsonfile">Soubor</label>
+                <input type="file" name="jsonfile" id="jsonfile" accept=".json" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="edit" style="display: none;">
+            <h3>Úprava dat</h3>
+            <button onclick="closeEdit()">X</button>
+            <form action="/ridicskeopravneni/upravit" method="post" id="ridicskeopravneni">
+                <input type="hidden" name="table" id="table" value="ridicskeopravneni" required>
+                <label for="id">ID</label>
+                <input type="text" name="id" id="id" required readonly>
+                <label for="oznaceni">Označení</label>
+                <input type="text" name="oznaceni" id="oznaceni" minlength="1" maxlength="5" pattern="[A-Za-z0-9]" title="[A-Z a-z 0-9]" required>
+                <label for="kategorie">Kategorie</label>
+                <input type="text" name="kategorie" id="kategorie" minlength="2" maxlength="50" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="max_hmotnost_kg">Hmotnost (Kg)</label>
+                <input type="text" name="max_hmotnost_kg" id="max_hmotnost_kg" minlength="2" maxlength="8" pattern="[0-9]+" title="[0-9]" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="data" style="display: block;">
+            <h3>Vyhledávání</h3>
+            <form action="/ridicskeopravneni/hledat" method="post" id="ridicskeopravneni">
+                <input type="hidden" name="table" id="table" value="ridicskeopravneni" required>
+                <label for="oznaceni">Označení</label>
+                <input type="text" name="oznaceni" id="oznaceni" maxlength="5" pattern="[A-Za-z0-9]" title="[A-Z a-z 0-9]">
+                <label for="kategorie">Kategorie</label>
+                <input type="text" name="kategorie" id="kategorie" maxlength="50" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
+                <label for="max_hmotnost_kg">Hmotnost (Kg)</label>
+                <input type="text" name="max_hmotnost_kg" id="max_hmotnost_kg" maxlength="8" pattern="[0-9]+" title="[0-9]">
+                <button type="submit">Submit</button>
+            </form>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Označení</th>
+                    <th>Kategorie</th>
+                    <th>Max. Hmotnost (Kg)</th>
+                    <th>Upravit</th>
+                    <th>Smazat</th>
+                </tr>
+                <% for(var i=0; i < data.length; i++) { %>
+                <tr>
+                    <td id="<%=i%>_id"><%= data[i].id_ro %></td>
+                    <td id="<%=i%>_oznaceni"><%= data[i].oznaceni %></td>
+                    <td id="<%=i%>_kategorie"><%= data[i].kategorie %></td>
+                    <td id="<%=i%>_max_hmotnost_kg"><%= data[i].max_hmotnost_kg %></td>
+                    <td><button onclick="openEdit(<%=i%>)">✏️</button></td>
+                    <td><form action="/ridicskeopravneni/smazat" method="post"><input type="hidden" name="id" value="<%= data[i].id_ro %>"><button type="submit">❌</button></form></td>
+                </tr> 
+                <% } %>
+            </table>
+        </div> 
+    </main>
+    <%- include('../partials/footer'); %>
+
+    <script>
+        const insert = document.getElementsByClassName('insert')[0];
+        const edit = document.getElementsByClassName('edit')[0];
+        const data = document.getElementsByClassName('data')[0];
+
+
+        function openEdit(id) {
+            for (var i = 1; i < 6+1; i++) {
+                edit.getElementsByTagName('input')[i].value = document.getElementById(id +'_'+ edit.getElementsByTagName('input')[i].id).innerText;
+            }
+            edit.style.display = 'block';
+            data.style.display = 'none';
+        }
+
+        function closeEdit() {
+            edit.style.display = 'none';
+            data.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

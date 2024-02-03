@@ -29,7 +29,7 @@
             <h3>Úprava dat</h3>
             <button onclick="closeEdit()">X</button>
             <form action="/urad/upravit" method="post" id="urad">
-                <input type="hidden" name="table" id="table" value="urad">
+                <input type="hidden" name="table" id="table" value="urad" required>
                 <label for="id">ID</label>
                 <input type="text" name="id" id="id" required readonly>
                 <label for="nazev">Název</label>
@@ -44,7 +44,7 @@
         <div class="data" style="display: block;">
             <h3>Vyhledávání</h3>
             <form action="/urad/hledat" method="post" id="urad">
-                <input type="hidden" name="table" id="table" value="urad">
+                <input type="hidden" name="table" id="table" value="urad" required>
                 <label for="nazev">Název</label>
                 <input type="text" name="nazev" id="nazev" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
                 <label for="adresa">Adresa</label>

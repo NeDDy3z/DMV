@@ -6,7 +6,9 @@ const app = express();
 const port = 3000;
 
 const uradRouter = require("./routes/urad");
-
+const ridicRouter = require("./routes/ridic");
+const ridicskeopravneniRouter = require("./routes/ridicskeopravneni");
+const vozidloRouter = require("./routes/ridic");
 
 
 // Middlewares
@@ -25,6 +27,9 @@ app.get('/', (req, res) => {
 });
 
 app.use("/urad", uradRouter);
+app.use("/ridic", ridicRouter);
+app.use("/ridicskeopravneni", ridicskeopravneniRouter);
+app.use("/vozidlo", vozidloRouter);
 
 
 

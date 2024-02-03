@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../partials/head', {title: title}); %>
+<body>
+    <%- include('../partials/header', {title: title}); %>
+    <main>
+        <p><%- msg %></p>
+        <div class="insert">
+            <h3>Vložení dat</h3>
+            <form action="/ridic/pridat" method="post" id="ridic">
+                <input type="hidden" name="table" id="table" value="ridic" required>
+                <label for="jmeno">Jméno</label>
+                <input type="text" name="jmeno" id="jmeno" minlength="5" maxlength="255" pattern="[A-Za-z\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="prijmeni">Příjmení</label>
+                <input type="text" name="prijmeni" id="prijmeni" minlength="5" maxlength="255" pattern="[A-Za-z\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="rod_cis">Rodné číslo</label>
+                <input type="text" name="rod_cis" id="rod_cis" minlength="5" maxlength="11" pattern="[0-9]{6}/[0-9]{4}" title="[0-9]" required>
+                <label for="ztp">Invalida</label>
+                <input type="checkbox" name="ztp" id="ztp">
+                <label for="adresa">Bydliště</label>
+                <input type="text" name="adresa" id="adresa" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <button type="submit">Submit</button>
+            </form>
+            <h3>Vložení souboru .JSON</h3>
+            <form action="/ridic/pridat/json" method="post" id="ridic" enctype="multipart/form-data">
+                <input type="hidden" name="table" id="table" value="ridic" required>
+                <label for="jsonfile">Soubor</label>
+                <input type="file" name="jsonfile" id="jsonfile" accept=".json" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="edit" style="display: none;">
+            <h3>Úprava dat</h3>
+            <button onclick="closeEdit()">X</button>
+            <form action="/ridic/upravit" method="post" id="ridic">
+                <input type="hidden" name="table" id="table" value="ridic" required>
+                <label for="id">ID</label>
+                <input type="text" name="id" id="id" required readonly>
+                <label for="jmeno">Jméno</label>
+                <input type="text" name="jmeno" id="jmeno" minlength="5" maxlength="255" pattern="[A-Za-z\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="prijmeni">Příjmení</label>
+                <input type="text" name="prijmeni" id="prijmeni" minlength="5" maxlength="255" pattern="[A-Za-z\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="rod_cis">Rodné číslo</label>
+                <input type="text" name="rod_cis" id="rod_cis" minlength="5" maxlength="11" pattern="[0-9]{6}/[0-9]{4}" title="[0-9]" required>
+                <label for="ztp">Invalida</label>
+                <input type="checkbox" name="ztp" id="ztp">
+                <label for="adresa">Bydliště</label>
+                <input type="text" name="adresa" id="adresa" minlength="5" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="data" style="display: block;">
+            <h3>Vyhledávání</h3>
+            <form action="/ridic/hledat" method="post" id="ridic">
+                <input type="hidden" name="table" id="table" value="ridic" required>
+                <label for="jmeno">Jméno</label>
+                <input type="text" name="jmeno" id="jmeno" maxlength="255" pattern="[A-Za-z\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
+                <label for="prijmeni">Příjmení</label>
+                <input type="text" name="prijmeni" id="prijmeni" maxlength="255" pattern="[A-Za-z\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
+                <label for="rod_cis">Rodné číslo</label>
+                <input type="text" name="rod_cis" id="rod_cis" maxlength="11" pattern="[0-9/]*" title="[0-9]">
+                <label for="ztp">Invalida</label>
+                <input type="checkbox" name="ztp" id="ztp">
+                <label for="adresa">Bydliště</label>
+                <input type="text" name="adresa" id="adresa" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
+                <button type="submit">Submit</button>
+            </form>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Jméno</th>
+                    <th>Příjmení</th>
+                    <th>Rodné číslo</th>
+                    <th>Invalida</th>
+                    <th>Bydliště</th>
+                    <th>Upravit</th>
+                    <th>Smazat</th>
+                </tr>
+                <% for(var i=0; i < data.length; i++) { %>
+                <tr>
+                    <td id="<%=i%>_id"><%= data[i].id_o %></td>
+                    <td id="<%=i%>_jmeno"><%= data[i].jmeno %></td>
+                    <td id="<%=i%>_prijmeni"><%= data[i].prijmeni %></td>
+                    <td id="<%=i%>_rod_cis"><%= data[i].rod_cis %></td>
+                    <td id="<%=i%>_ztp"><% if(data[i].ztp == 0) { %> Ano <% } else { %> Ne <% } %></td>
+                    <td id="<%=i%>_adresa"><%= data[i].adresa %></td>
+                    <td><button onclick="openEdit(<%=i%>)">✏️</button></td>
+                    <td><form action="/ridic/smazat" method="post"><input type="hidden" name="id" value="<%= data[i].id_o %>"><button type="submit">❌</button></form></td>
+                </tr> 
+                <% } %>
+            </table>
+        </div> 
+    </main>
+    <%- include('../partials/footer'); %>
+
+    <script>
+        const insert = document.getElementsByClassName('insert')[0];
+        const edit = document.getElementsByClassName('edit')[0];
+        const data = document.getElementsByClassName('data')[0];
+
+
+        function openEdit(id) {
+            for (var i = 1; i < 6+1; i++) {
+                edit.getElementsByTagName('input')[i].value = document.getElementById(id +'_'+ edit.getElementsByTagName('input')[i].id).innerText;
+            }
+            if (document.getElementById(id +'_ztp').innerText == "Ano") edit.getElementsByTagName('input')[5].checked = true;
+            edit.style.display = 'block';
+            data.style.display = 'none';
+        }
+
+        function closeEdit() {
+            edit.style.display = 'none';
+            data.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

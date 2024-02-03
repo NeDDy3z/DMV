@@ -1,0 +1,18 @@
+[
+    {
+        "nazev": "Radnice Kostelec",
+        "adresa": "Kostelec 1, 257 01 Kostelec",
+        "typ": "Obecní úřad"
+    },
+    {
+        "nazev": "Obecní úřad Dubčany",
+        "adresa": "Dubčany 5, 345 67 Dubčany",
+        "typ": "Obecní úřad"
+    },
+    {
+        "nazev": "Magistrát hl.m. Prahy",
+        "adresa": "Náměstí 10, 750 01 Přerov",
+        "typ": "Magistrát"
+    }
+    
+]
