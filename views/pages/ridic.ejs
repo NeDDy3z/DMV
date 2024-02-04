@@ -67,6 +67,7 @@
                 <input type="text" name="adresa" id="adresa" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
                 <button type="submit">Submit</button>
             </form>
+            <br>
             <table>
                 <tr>
                     <th>ID</th>
@@ -167,7 +168,7 @@
             }
             if (document.getElementById(id +'_ztp').innerText == "Ano") edit.getElementsByTagName('input')[5].checked = true;
             
-            rps = document.getElementById(id+'_ridic').getElementsByTagName('td')[9].getElementsByTagName('p');
+            rps = document.getElementById(id+'_ridic').getElementsByTagName('td')[document.getElementById(id+'_ridic').getElementsByTagName('td').length-1].getElementsByTagName('p');
             table = document.getElementById('ridic_rp');
             
             table.innerHTML = '';

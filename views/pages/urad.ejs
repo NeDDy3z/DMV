@@ -53,6 +53,7 @@
                 <input type="text" name="typ" id="typ" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]">
                 <button type="submit">Submit</button>
             </form>
+            <br>
             <table>
                 <tr>
                     <th>ID</th>
@@ -88,11 +89,13 @@
                 edit.getElementsByTagName('input')[i].value = document.getElementById(id +'_'+ edit.getElementsByTagName('input')[i].id).innerText;
             }
             edit.style.display = 'block';
+            insert.style.display = 'none';
             data.style.display = 'none';
         }
 
         function closeEdit() {
             edit.style.display = 'none';
+            insert.style.display = 'block';
             data.style.display = 'block';
         }
     </script>

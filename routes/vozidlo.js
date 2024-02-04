@@ -1,4 +1,4 @@
-// Table - Vozidlo
+// Table - Vozidlo/Technický průkaz
 // Dependencies
 const express = require("express");
 const multer = require('multer');
@@ -8,7 +8,8 @@ const db = require('../database');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const tableName = 'vozidlo';
+const sqlName = 'technickyprukaz';
+const dirName = 'vozidlo';
 let searchData = [];
 
 
@@ -19,19 +20,18 @@ router.get('/', (req, res) => {
     try {
         let msg = req.query.msg ? req.query.msg : '';
         db.query('SELECT * FROM urad;', (err, urad) => {
-            db.query('SELECT * FROM ridicskeopravneni;', (err, ridicskeopravneni) => {
-                db.query("SELECT r.id_rp, r.id_r, u.nazev as 'urad', ro.oznaceni as 'oznaceni', r.dat_zacatku, r.dat_konce FROM ridicskyprukaz r JOIN urad u ON r.id_u = u.id_u JOIN ridicskeopravneni ro ON r.id_ro = ro.id_ro;", (err, ridicskyprukaz) => {
-                    if (searchData.length > 0) res.render('pages/'+tableName, { title: 'Vozidla', vozidlo: null, ridic: searchData, ridicskyprukaz: ridicskyprukaz, urad: urad, ridicskeopravneni: ridicskeopravneni , msg: msg });
-                    else {
-                        select().then(results => {
-                            res.render('pages/'+tableName, { title: 'Vozidla', vozidlo: null, ridic: results, ridicskyprukaz: ridicskyprukaz, urad: urad, ridicskeopravneni: ridicskeopravneni, msg: msg });
-                        });
-                    } 
+            if (searchData.length > 0) {
+                res.render('pages/'+dirName, { title: 'Vozidla', technickyprukaz: searchData, urad: urad, msg: msg });
+                searchData = [];
+            }
+            else {
+                select().then(results => {
+                    res.render('pages/'+dirName, { title: 'Vozidla', technickyprukaz: results, urad: urad, msg: msg });
                 });
-            });
+            }
         });
     } catch (error) {
-        console.error('Error rendering '+tableName+':', error);
+        console.error('Error rendering '+sqlName+':', error);
         res.status(500).redirect('/');
     }
 });
@@ -39,54 +39,59 @@ router.get('/', (req, res) => {
 // Search
 router.post('/hledat', (req, res) => {
     try {
-        const { jmeno, prijmeni, rod_cis, ztp, adresa } = req.body;
-        select(jmeno, prijmeni, rod_cis, ztp, adresa).then(results => {
+        const { id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol } = req.body;
+        select(id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol).then(results => {
             searchData = results;
-            res.status(200).redirect('/'+tableName);
+            res.status(200).redirect('/'+dirName);
         });
     } catch (error) {
-        console.error('Error searching '+tableName+':', error);
-        res.status(500).redirect('/'+tableName+'?msg=Chyba při vyhledávání dat');
+        console.error('Error searching '+sqlName+':', error);
+        res.status(500).redirect('/'+dirName+'?msg=Chyba při vyhledávání dat');
     }
 });
 
 // Adding
 router.post("/pridat", (req, res) => {
     try {
-        const { jmeno, prijmeni, rod_cis, ztp, adresa, urad, oznaceni, dat_zacatku, dat_konce } = req.body;
-        // Check if dat_zacatku is before dat_konce - prdím na to, stejně to není perfektní takže who cares 🤪...
-        if (jmeno, prijmeni, rod_cis, adresa) {
-            let sql = 'INSERT INTO '+ tableName +' (jmeno, prijmeni, rod_cis, ztp, adresa) VALUES (?,?,?,?,?);';
-            db.query(sql, [jmeno, prijmeni, rod_cis, ztp, adresa], (err, results) => {
-                var id = results.insertId;
-                if (urad, oznaceni, dat_zacatku, dat_konce) {
-                    let sql2 = 'INSERT INTO ridicskyprukaz (id_r, id_u, id_ro, dat_zacatku, dat_konce) VALUES (?,?,?,?,?);';
-                    db.query(sql2, [id, urad, oznaceni, dat_zacatku, dat_konce], (err, results) => {
-                        if (err) console.error('DatabaseError - Insert ridicskyprukaz:\n', err);
-                        else res.status(200).redirect('/'+tableName+'?msg=Data přidána');
+        const { id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol } = req.body;
+        if (id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol) {
+            let sql = 'INSERT INTO '+ sqlName +' (id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol) VALUES (?,?,?,?,?,?,?,?,?,?,?);';
+            db.query(sql, [id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol], (err, results) => {
+                if (!err) {
+                    var tp_id = results.insertId;
+                    let sql2 = 'INSERT INTO vozidlo (id_tp) VALUES (?);';
+                    db.query(sql2, [tp_id], (err, results) => {
+                        if (!err) {
+                            var v_id = results.insertId;
+                            let sql3 = 'UPDATE '+ sqlName +' SET id_v = ? WHERE id_tp = ?;';
+                            db.query(sql3, [v_id, tp_id], (err, results) => {
+                                if (err) {
+                                    console.error('DatabaseError - Insert '+sqlName+':\n', err);
+                                    res.status(500).redirect('/'+dirName+'?msg=Chyba při přidávání dat');
+                                }
+                                else res.status(200).redirect('/'+dirName+'?msg=Data přidána');
+                            });
+                        }
                     });
                 }
-                else if (err) {
-                    console.error('DatabaseError - Insert '+tableName+':\n', err);
-                    res.status(500).redirect('/'+tableName+'?msg=Chyba při přidávání dat');
-                }
-                else res.status(200).redirect('/'+tableName+'?msg=Data přidána');
+                
             });
         }
-        else res.status(500).redirect('/'+tableName+'?msg=Chyba při vkládání dat na straně klienta');
+        else res.status(500).redirect('/'+dirName+'?msg=Chyba při vkládání dat na straně klienta');
     } catch (error) {
-        console.error('Error adding '+tableName+':', error);
-        res.status(500).redirect('/'+tableName+'?msg=Chyba při vkládání dat na straně klienta');
+        console.error('Error adding '+sqlName+':', error);
+        res.status(500).redirect('/'+dirName+'?msg=Chyba při vkládání dat na straně klienta');
     } 
 });
 
 // Adding from JSON
+/*
 router.post("/pridat/json", upload.single('jsonfile'), (req, res) => {
     try {
-        if (!req.file) return res.status(400).redirect('/'+tableName+'?msg=Chyba, soubor nebyl nahrán');
+        if (!req.file) return res.status(400).redirect('/'+dirName+'?msg=Chyba, soubor nebyl nahrán');
 
         const fileContent = req.file.buffer.toString('utf8');
-        const sql = 'INSERT INTO '+ tableName +' (jmeno, prijmeni, rod_cis, ztp, adresa) VALUES (?,?,?,?,?);';
+        const sql = 'INSERT INTO '+ sqlName +' (jmeno, prijmeni, rod_cis, ztp, adresa) VALUES (?,?,?,?,?);';
         
         try {
             const data = JSON.parse(fileContent);
@@ -99,15 +104,15 @@ router.post("/pridat/json", upload.single('jsonfile'), (req, res) => {
                                 let sql2 = 'INSERT INTO ridicskyprukaz (id_r, id_u, id_ro, dat_zacatku, dat_konce) VALUES (?,?,?,?,?);';
                                 db.query(sql2, [id, element.ridicskyprukaz.id_u, element.ridicskyprukaz.id_ro, element.ridicskyprukaz.dat_zacatku, element.ridicskyprukaz.dat_konce], (err, results) => {
                                     if (err) console.error('DatabaseError - Insert ridicskyprukaz:\n', err);
-                                    else res.status(200).redirect('/'+tableName+'?msg=Data přidána');
+                                    else res.status(200).redirect('/'+dirName+'?msg=Data přidána');
                                 });
                             }
                             else {
                                 if (err) {
-                                    console.log('DatabaseError - Insert '+tableName+':\n', err);
-                                    res.status(500).redirect('/'+tableName+'?msg=Chyba při přidávání dat');
+                                    console.log('DatabaseError - Insert '+sqlName+':\n', err);
+                                    res.status(500).redirect('/'+dirName+'?msg=Chyba při přidávání dat');
                                 }
-                                else res.status(200).redirect('/'+tableName+'?msg=Data přidána');
+                                else res.status(200).redirect('/'+dirName+'?msg=Data přidána');
                             }
                         }
                     });
@@ -115,61 +120,69 @@ router.post("/pridat/json", upload.single('jsonfile'), (req, res) => {
             });
     } catch (error) {
         console.log('Error parsing JSON file:', error);
-        res.status(500).redirect('/'+tableName+'?msg=Chyba při zpracování JSON souboru');
+        res.status(500).redirect('/'+dirName+'?msg=Chyba při zpracování JSON souboru');
     }
     } catch (error) {
         console.log('Error:', error);
     }
     finally {
-        res.status(200).redirect('/'+tableName);
+        res.status(200).redirect('/'+dirName);
     }
 });
+*/
 
 router.post("/upravit", (req, res) => {
     try {
-        const { id, jmeno, prijmeni, rod_cis, ztp, adresa } = req.body;
+        const { id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol, id_tp} = req.body;
 
-        if (id, jmeno, prijmeni, rod_cis, ztp, adresa) {
-            let sql = 'UPDATE '+ tableName +' SET jmeno = ?, prijmeni = ?, rod_cis = ?, ztp = ?, adresa = ? WHERE id_r = ?;';
+        if (id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol, id_tp) {
+            let sql = 'UPDATE '+ sqlName +' SET id_u = ?, provozovatel = ?, znacka = ?, model = ?, barva = ?, spz = ?, vin = ?, vykon_kw = ?, objem = ?, nej_rychlost = ?, rozmery_kol = ? WHERE id_tp = ?;';
         
-            db.query(sql, [jmeno, prijmeni, rod_cis, ztp, adresa, id], (err, results) => {
+            db.query(sql, [id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol, id_tp], (err, results) => {
                 if (err) {
-                    console.error('DatabaseError - Insert '+tableName+':\n', err);
-                    res.status(500).redirect('/'+tableName+'?msg=Chyba při úpravě dat');
+                    console.error('DatabaseError - Update '+sqlName+':\n', err);
+                    res.status(500).redirect('/'+dirName+'?msg=Chyba při úpravě dat');
                 }
-                else res.status(200).redirect('/'+tableName+'?msg=Data upravena');
+                else res.status(200).redirect('/'+dirName+'?msg=Data upravena');
             });
         }  
     } catch (error) {
-        console.error('Error editing '+tableName+':', error);
-        res.status(500).redirect('/'+tableName+'?msg=Chyba při úpravě dat na straně klienta');
+        console.error('Error editing '+sqlName+':', error);
+        res.status(500).redirect('/'+dirName+'?msg=Chyba při úpravě dat na straně klienta');
     }
 });
+
 
 // Deleting
 router.post("/smazat", (req, res) => {
     try {
-        let sql = 'DELETE FROM ridicskyprukaz WHERE id_r = ?;'
-        let sql2 = 'DELETE FROM '+ tableName +' WHERE id_r = ?';
-    
+        let sql = 'UPDATE technickyprukaz SET id_v = NULL WHERE id_tp = ?;';
+        let sql2 = 'DELETE from vozidlo WHERE id_tp = ?;';
+        let sql3 = 'DELETE from technickyprukaz WHERE id_tp = ?;';
+
         db.query(sql, [req.body.id], (err, results) => {
+            if (err) throw err;
             db.query(sql2, [req.body.id], (err, results) => {
-                res.status(200).redirect('/'+tableName+'?msg=Data smazána');
+                if (err) throw err;
+                db.query(sql3, [req.body.id], (err, results) => {
+                    if (err) throw err;
+                    res.status(200).redirect('/'+dirName+'?msg=Data smazána');
+                });
             });
         });
     } catch (error) {
-        console.error('Error deleting '+tableName+':', error);
-        res.status(500).redirect('/'+tableName+'?msg=Chyba při mazání dat');
+        console.error('Error deleting '+sqlName+':', error);
+        res.status(500).redirect('/'+dirName+'?msg=Chyba při mazání dat');
     }
 });
-  
+
 
 
 // SQL functions
-function select(jmeno, prijmeni, rod_cis, ztp, adresa) {
+function select(id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol) {
     try {
-        let sql = 'SELECT * FROM ' + tableName;
-        var data = { jmeno, prijmeni, rod_cis, ztp, adresa };
+        let sql = 'SELECT * FROM ' + sqlName;
+        var data = { id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol  };
         var conditions = [];
     
         for (var key in data) {
@@ -183,13 +196,13 @@ function select(jmeno, prijmeni, rod_cis, ztp, adresa) {
         return new Promise((resolve, reject) => {
             db.query(sql, (err, results) => {
                 if (err) {
-                    console.error('DatabaseError - Select '+tableName+':\n', err);
+                    console.error('DatabaseError - Select '+sqlName+':\n', err);
                     reject(err);
                 } else resolve(results);
             });
         });
     } catch (error) {
-        console.error('Error selecting '+tableName+':', error);
+        console.error('Error selecting '+sqlName+':', error);
     }
 };
 
