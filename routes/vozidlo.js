@@ -1,4 +1,4 @@
-// Table - Řidič
+// Table - Vozidlo
 // Dependencies
 const express = require("express");
 const multer = require('multer');
@@ -8,7 +8,7 @@ const db = require('../database');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const tableName = 'ridic';
+const tableName = 'vozidlo';
 let searchData = [];
 
 
@@ -21,10 +21,10 @@ router.get('/', (req, res) => {
         db.query('SELECT * FROM urad;', (err, urad) => {
             db.query('SELECT * FROM ridicskeopravneni;', (err, ridicskeopravneni) => {
                 db.query("SELECT r.id_rp, r.id_r, u.nazev as 'urad', ro.oznaceni as 'oznaceni', r.dat_zacatku, r.dat_konce FROM ridicskyprukaz r JOIN urad u ON r.id_u = u.id_u JOIN ridicskeopravneni ro ON r.id_ro = ro.id_ro;", (err, ridicskyprukaz) => {
-                    if (searchData.length > 0) res.render('pages/'+tableName, { title: 'Řidiči', ridic: searchData, ridicskyprukaz: ridicskyprukaz, urad: urad, ridicskeopravneni: ridicskeopravneni , msg: msg });
+                    if (searchData.length > 0) res.render('pages/'+tableName, { title: 'Vozidla', vozidlo: null, ridic: searchData, ridicskyprukaz: ridicskyprukaz, urad: urad, ridicskeopravneni: ridicskeopravneni , msg: msg });
                     else {
                         select().then(results => {
-                            res.render('pages/'+tableName, { title: 'Řidiči', ridic: results, ridicskyprukaz: ridicskyprukaz, urad: urad, ridicskeopravneni: ridicskeopravneni, msg: msg });
+                            res.render('pages/'+tableName, { title: 'Vozidla', vozidlo: null, ridic: results, ridicskyprukaz: ridicskyprukaz, urad: urad, ridicskeopravneni: ridicskeopravneni, msg: msg });
                         });
                     } 
                 });

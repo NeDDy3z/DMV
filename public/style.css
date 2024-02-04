@@ -1,0 +1,30 @@
+form {
+    max-width: 20rem;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    height: 1.25rem;
+}
+
+table {
+    max-width: 60rem;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }

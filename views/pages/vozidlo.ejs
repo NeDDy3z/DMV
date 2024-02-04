@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../partials/head', {title: title}); %>
+<body>
+    <%- include('../partials/header', {title: title}); %>
+    <main>
+        <p><%- msg %></p>
+        <div class="insert" style="display: block;">
+            <h3>Vložení dat</h3>
+            <form action="/vozidlo/pridat" method="post" id="vozidlo">
+                <input type="hidden" name="table" id="table" value="vozidlo" required>
+                <select name="urad" id="urad">
+                    <option value="">Úřad</option>
+                    <% if (urad) {
+                        for(var i=0; i < urad.length; i++) { %>
+                        <option value="<%=urad[i].id_u%>"><%=urad[i].nazev%></option>
+                    <% }} %>
+                </select>
+                <label for="provozovatel">Provozovatel</label>
+                <input type="text" name="provozovatel" id="provozovatel" minlength="2" maxlength="255" pattern="[A-Za-Z\s]+" title="[A-Za-z]" required>
+                <label for="znacka">Značka</label>
+                <input type="text" name="znacka" id="znacka" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="model">Model</label>
+                <input type="text" name="model" id="model" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="barva">Barva</label>
+                <input type="text" name="barva" id="barva" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="spz">SPZ</label>
+                <input type="text" name="spz" id="spz" minlength="2" maxlength="255" pattern="[A-Z0-9]{8}" title="[A-Z 0-9]" required>
+                <label for="vin">VIN</label>
+                <input type="text" name="vin" id="vin" minlength="2" maxlength="255" pattern="[A-Z0-9]{17}" title="[A-Z 0-9]" required>
+                <label for="vykon_kw">Výkon (kw)</label>
+                <input type="number" name="vykon_kw" id="vykon_kw" min="0" required>
+                <label for="objem">Objem (L)</label>
+                <input type="number" name="objem" id="objem" min="0" required>
+                <label for="nej_rychlost">Nejvyšší rychlost (km/h)</label>
+                <input type="number" name="nej_rychlost" id="nej_rychlost" min="0" required>
+                <label for="rozmery_kol">Rozměry Kol</label>
+                <input type="text" name="rozmery_kol" id="rozmery_kol" minlength="2" maxlength="255" pattern="[0-9]{3}/[0-9]{2} R [0-9]{2}" title="[0-9]">
+                <button type="submit">Submit</button>
+            </form>
+            <h3>Vložení souboru .JSON</h3>
+            <form action="/vozidlo/pridat/json" method="post" id="vozidlo" enctype="multipart/form-data">
+                <input type="hidden" name="table" id="table" value="vozidlo" required>
+                <label for="jsonfile">Soubor</label>
+                <input type="file" name="jsonfile" id="jsonfile" accept=".json" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="data" style="display: block;">
+            <h3>Vyhledávání</h3>
+            <form action="/vozidlo/hledat" method="post" id="vozidlo">
+                <input type="hidden" name="table" id="table" value="vozidlo" required>
+                <label for="provozovatel">Provozovatel</label>
+                <input type="text" name="provozovatel" id="provozovatel" minlength="2" maxlength="255" pattern="[A-Za-Z\s]+" title="[A-Za-z]" required>
+                <label for="znacka">Značka</label>
+                <input type="text" name="znacka" id="znacka" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="model">Model</label>
+                <input type="text" name="model" id="model" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="barva">Barva</label>
+                <input type="text" name="barva" id="barva" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="spz">SPZ</label>
+                <input type="text" name="spz" id="spz" minlength="2" maxlength="255" pattern="[A-Z0-9]{8}" title="[A-Z 0-9]" required>
+                <label for="vin">VIN</label>
+                <input type="text" name="vin" id="vin" minlength="2" maxlength="255" pattern="[A-Z0-9]{17}" title="[A-Z 0-9]" required>
+                <label for="vykon_kw">Výkon (kw)</label>
+                <input type="number" name="vykon_kw" id="vykon_kw" min="0" required>
+                <label for="objem">Objem (L)</label>
+                <input type="number" name="objem" id="objem" min="0" required>
+                <label for="nej_rychlost">Nejvyšší rychlost (km/h)</label>
+                <input type="number" name="nej_rychlost" id="nej_rychlost" min="0" required>
+                <label for="rozmery_kol">Rozměry Kol</label>
+                <input type="text" name="rozmery_kol" id="rozmery_kol" minlength="2" maxlength="255" pattern="[0-9]{3}/[0-9]{2} R [0-9]{2}" title="[0-9]">
+                <button type="submit">Submit</button>
+            </form>
+            <table>
+                <tr>
+                    <th>ID-V</th>
+                    <th>ID-TP</th>
+                    <th>Úřad</th>
+                    <th>Provozovatel</th>
+                    <th>Značka</th>
+                    <th>Model</th>
+                    <th>Barva</th>
+                    <th>SPZ</th>
+                    <th>VIN</th>
+                    <th>Výkon (kw)</th>
+                    <th>Objem (L)</th>
+                    <th>Nej. rychlost (km/h)</th>
+                    <th>Rozměry kol</th>
+                    <th>Upravit</th>
+                    <th>Smazat</th>
+                </tr>
+            </table>
+        </div>
+        <div class="edit" style="display: none;">
+            <h3>Úprava dat</h3>
+            <button onclick="closeEdit()">X</button>
+            <form action="/vozidlo/upravit" method="post" id="vozidlo">
+                <input type="hidden" name="table" id="table" value="vozidlo" required>
+                <label for="id">ID</label>
+                <input type="text" name="id" id="id" required readonly>
+                <label for="provozovatel">Provozovatel</label>
+                <input type="text" name="provozovatel" id="provozovatel" minlength="2" maxlength="255" pattern="[A-Za-Z\s]+" title="[A-Za-z]" required>
+                <label for="znacka">Značka</label>
+                <input type="text" name="znacka" id="znacka" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="model">Model</label>
+                <input type="text" name="model" id="model" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="barva">Barva</label>
+                <input type="text" name="barva" id="barva" minlength="2" maxlength="255" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
+                <label for="spz">SPZ</label>
+                <input type="text" name="spz" id="spz" minlength="2" maxlength="255" pattern="[A-Z0-9]{8}" title="[A-Z 0-9]" required>
+                <label for="vin">VIN</label>
+                <input type="text" name="vin" id="vin" minlength="2" maxlength="255" pattern="[A-Z0-9]{17}" title="[A-Z 0-9]" required>
+                <label for="vykon_kw">Výkon (kw)</label>
+                <input type="number" name="vykon_kw" id="vykon_kw" min="0" required>
+                <label for="objem">Objem (L)</label>
+                <input type="number" name="objem" id="objem" min="0" required>
+                <label for="nej_rychlost">Nejvyšší rychlost (km/h)</label>
+                <input type="number" name="nej_rychlost" id="nej_rychlost" min="0" required>
+                <label for="rozmery_kol">Rozměry Kol</label>
+                <input type="text" name="rozmery_kol" id="rozmery_kol" minlength="2" maxlength="255" pattern="[0-9]{3}/[0-9]{2} R [0-9]{2}" title="[0-9]">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </main>
+    <%- include('../partials/footer'); %>
+    <script>
+        const insert = document.getElementsByClassName('insert')[0];
+        const edit = document.getElementsByClassName('edit')[0];
+        const data = document.getElementsByClassName('data')[0];
+
+
+        function openEdit(id) {
+            document.getElementById('id_r').value = edit.getElementsByTagName('input')[1].value;
+            for (var i = 1; i < 6+1; i++) {
+                edit.getElementsByTagName('input')[i].value = document.getElementById(id +'_'+ edit.getElementsByTagName('input')[i].id).innerText;
+            }
+            if (document.getElementById(id +'_ztp').innerText == "Ano") edit.getElementsByTagName('input')[5].checked = true;
+            
+            rps = document.getElementById(id+'_vozidlo').getElementsByTagName('td')[9].getElementsByTagName('p');
+            table = document.getElementById('vozidlo_rp');
+            
+            table.innerHTML = '';
+            table.appendChild(document.createElement('tr')).innerHTML = '<th>ID</th><th>Označení</th><th>Úřad</th><th>Datum začátku</th><th>Datum konce</th><th>Smazat</th>';
+
+            for (var i = 0; i < rps.length; i++) {
+                td = document.createElement('tr');
+                temp = rps[i].innerText.split(',');
+                
+                for (var j = 0; j < temp.length; j++) {
+                    td.appendChild(document.createElement('td')).innerText = temp[j];
+                }
+                td.appendChild(document.createElement('td')).innerHTML = '<form action="/vozidloskyprukaz/smazat" method="post"><input type="hidden" name="id_rp" value="'+ temp[0] +'"><button type="submit">❌</button></form>';
+                table.appendChild(td);
+            }
+
+
+            edit.style.display = 'block';
+            insert.style.display = 'none';
+            data.style.display = 'none';
+        }
+
+        function closeEdit() {
+            edit.style.display = 'none';
+            insert.style.display = 'block';
+            data.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

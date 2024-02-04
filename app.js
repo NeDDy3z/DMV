@@ -5,16 +5,22 @@ const path = require("path");
 const app = express();
 const port = 3000;
 
+
+
+// Routes
 const uradRouter = require("./routes/urad");
 const ridicRouter = require("./routes/ridic");
+const ridicskyprukazRouter = require("./routes/ridicskyprukaz");
 const ridicskeopravneniRouter = require("./routes/ridicskeopravneni");
-const vozidloRouter = require("./routes/ridic");
+const vozidloRouter = require("./routes/vozidlo");
+
 
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/public', express.static('public'));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -28,6 +34,7 @@ app.get('/', (req, res) => {
 
 app.use("/urad", uradRouter);
 app.use("/ridic", ridicRouter);
+app.use("/ridicskyprukaz", ridicskyprukazRouter);
 app.use("/ridicskeopravneni", ridicskeopravneniRouter);
 app.use("/vozidlo", vozidloRouter);
 

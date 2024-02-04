@@ -10,7 +10,7 @@
             <form action="/ridicskeopravneni/pridat" method="post" id="ridicskeopravneni">
                 <input type="hidden" name="table" id="table" value="ridicskeopravneni" required>
                 <label for="oznaceni">Označení</label>
-                <input type="text" name="oznaceni" id="oznaceni" minlength="1" maxlength="5" pattern="[A-Za-z0-9]" title="[A-Z a-z 0-9]" required>
+                <input type="text" name="oznaceni" id="oznaceni" minlength="1" maxlength="5" pattern="[A-Z0-9]" title="[A-Z a-z 0-9]" required>
                 <label for="kategorie">Kategorie</label>
                 <input type="text" name="kategorie" id="kategorie" minlength="2" maxlength="50" pattern="[A-Za-z0-9\u0080-\uFFFF,.\-\s]+" title="[A-Z a-z 0-9 , . -]" required>
                 <label for="max_hmotnost_kg">Hmotnost (Kg)</label>

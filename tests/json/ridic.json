@@ -4,20 +4,38 @@
         "prijmeni": "Pavel",
         "rod_cis": "111111/1111",
         "ztp": true,
-        "adresa": "Prdelná 12, Praha 1 120 00"
+        "adresa": "Prdelná 12, Praha 1 120 00",
+        "ridicskyprukaz": {
+            "id_u": 1,
+            "id_ro": 1,
+            "dat_zacatku": "2015-01-01",
+            "dat_konce": "2018-12-31"
+        }
     },
     {
         "jmeno": "Anna",
         "prijmeni": "Novakova",
         "rod_cis": "987654/3210",
         "ztp": false,
-        "adresa": "Hlavni 45, Brno 602 00"
+        "adresa": "Hlavni 45, Brno 602 00",
+        "ridicskyprukaz": {
+            "id_u": 2,
+            "id_ro": 1,
+            "dat_zacatku": "2015-01-01",
+            "dat_konce": "2021-12-31"
+        }
     },
     {
         "jmeno": "Petr",
         "prijmeni": "Svoboda",
         "rod_cis": "456789/0123",
         "ztp": true,
-        "adresa": "Ulice 8, Ostrava 700 01"
+        "adresa": "Ulice 8, Ostrava 700 01",
+        "ridicskyprukaz": {
+            "id_u": 2,
+            "id_ro": 1,
+            "dat_zacatku": "2015-01-01",
+            "dat_konce": "2020-12-31"
+        }
     }
 ]
