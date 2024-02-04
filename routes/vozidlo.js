@@ -84,53 +84,6 @@ router.post("/pridat", (req, res) => {
     } 
 });
 
-// Adding from JSON
-/*
-router.post("/pridat/json", upload.single('jsonfile'), (req, res) => {
-    try {
-        if (!req.file) return res.status(400).redirect('/'+dirName+'?msg=Chyba, soubor nebyl nahrán');
-
-        const fileContent = req.file.buffer.toString('utf8');
-        const sql = 'INSERT INTO '+ sqlName +' (jmeno, prijmeni, rod_cis, ztp, adresa) VALUES (?,?,?,?,?);';
-        
-        try {
-            const data = JSON.parse(fileContent);
-            data.forEach(element => {
-                if (element.jmeno && element.prijmeni && element.rod_cis && element.adresa) {
-                    db.query(sql, [element.jmeno, element.prijmeni, element.rod_cis, element.ztp, element.adresa], (err, results) => {
-                        if (!err) {
-                            var id = results.insertId;
-                            if (element.ridicskyprukaz.id_u, element.ridicskyprukaz.id_ro, element.ridicskyprukaz.dat_zacatku, element.ridicskyprukaz.dat_konce) {
-                                let sql2 = 'INSERT INTO ridicskyprukaz (id_r, id_u, id_ro, dat_zacatku, dat_konce) VALUES (?,?,?,?,?);';
-                                db.query(sql2, [id, element.ridicskyprukaz.id_u, element.ridicskyprukaz.id_ro, element.ridicskyprukaz.dat_zacatku, element.ridicskyprukaz.dat_konce], (err, results) => {
-                                    if (err) console.error('DatabaseError - Insert ridicskyprukaz:\n', err);
-                                    else res.status(200).redirect('/'+dirName+'?msg=Data přidána');
-                                });
-                            }
-                            else {
-                                if (err) {
-                                    console.log('DatabaseError - Insert '+sqlName+':\n', err);
-                                    res.status(500).redirect('/'+dirName+'?msg=Chyba při přidávání dat');
-                                }
-                                else res.status(200).redirect('/'+dirName+'?msg=Data přidána');
-                            }
-                        }
-                    });
-                }
-            });
-    } catch (error) {
-        console.log('Error parsing JSON file:', error);
-        res.status(500).redirect('/'+dirName+'?msg=Chyba při zpracování JSON souboru');
-    }
-    } catch (error) {
-        console.log('Error:', error);
-    }
-    finally {
-        res.status(200).redirect('/'+dirName);
-    }
-});
-*/
-
 router.post("/upravit", (req, res) => {
     try {
         const { id_u, provozovatel, znacka, model, barva, spz, vin, vykon_kw, objem, nej_rychlost, rozmery_kol, id_tp} = req.body;

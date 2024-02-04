@@ -39,13 +39,6 @@
                 <input type="text" name="rozmery_kol" id="rozmery_kol" minlength="2" maxlength="255" pattern="[0-9]{3}/[0-9]{2}R[0-9]{2}" title="[0-9]">
                 <button type="submit">Submit</button>
             </form>
-            <h3>Vložení souboru .JSON</h3>
-            <form action="/vozidlo/pridat/json" method="post" id="vozidlo" enctype="multipart/form-data">
-                <input type="hidden" name="table" id="table" value="vozidlo" required>
-                <label for="jsonfile">Soubor</label>
-                <input type="file" name="jsonfile" id="jsonfile" accept=".json" required>
-                <button type="submit">Submit</button>
-            </form>
         </div>
         <div class="data" style="display: block;">
             <h3>Vyhledávání</h3>
